@@ -1,0 +1,32 @@
+<Bindings>
+	<Binding name="ESDT_OUTFIT1" header="ESDT_TITLE">
+		ElvUI_ESDT:EquipOutfit(1)
+	</Binding>
+	<Binding name="ESDT_OUTFIT2">
+		ElvUI_ESDT:EquipOutfit(2)
+	</Binding>
+	<Binding name="ESDT_OUTFIT3">
+		ElvUI_ESDT:EquipOutfit(3)
+	</Binding>
+	<Binding name="ESDT_OUTFIT4">
+		ElvUI_ESDT:EquipOutfit(4)
+	</Binding>
+	<Binding name="ESDT_OUTFIT5">
+		ElvUI_ESDT:EquipOutfit(5)
+	</Binding>
+	<Binding name="ESDT_OUTFIT6">
+		ElvUI_ESDT:EquipOutfit(6)
+	</Binding>
+	<Binding name="ESDT_OUTFIT7">
+		ElvUI_ESDT:EquipOutfit(7)
+	</Binding>
+	<Binding name="ESDT_OUTFIT8">
+		ElvUI_ESDT:EquipOutfit(8)
+	</Binding>
+	<Binding name="ESDT_OUTFIT9">
+		ElvUI_ESDT:EquipOutfit(9)
+	</Binding>
+	<Binding name="ESDT_OUTFIT10">
+		ElvUI_ESDT:EquipOutfit(10)
+	</Binding>
+</Bindings>
