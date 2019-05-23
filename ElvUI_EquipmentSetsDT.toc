@@ -1,7 +1,7 @@
 ## Interface: 80100
 ## Author: Lockslap
 ## Title: |cff1784d1ElvUI|r Equipment Sets Datatext
-## Version: 3.0.0
+## Version: 3.0.1
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
 
