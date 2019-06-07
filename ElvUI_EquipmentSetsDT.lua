@@ -1,11 +1,27 @@
 -------------------------------------------------------------------------------
--- ElvUI Equipment Sets Datatext By Lockslap
+-- ElvUI Equipment Sets Datatext By Crackpotx
 -------------------------------------------------------------------------------
 local E, _, V, P, G = unpack(ElvUI)
 ElvUI_ESDT = E:NewModule("ElvUI_EquipmentSetsDT")
 local DT = E:GetModule("DataTexts")
 local L = LibStub("AceLocale-3.0"):GetLocale("ElvUI_EquipmentSetsDT", false)
 local EP = LibStub("LibElvUIPlugin-1.0")
+
+local unpack = _G["unpack"]
+local CreateFrame = _G["CreateFrame"]
+local C_EquipmentSet_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
+local C_EquipmentSet_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
+local C_EquipmentSet_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
+local C_EquipmentSet_GetNumEquipmentSets = C_EquipmentSet.GetNumEquipmentSets
+local C_EquipmentSet_GetEquipmentSetID = C_EquipmentSet.GetEquipmentSetID
+local IsShiftKeyDown = _G["IsShiftKeyDown"]
+local IsControlKeyDown = _G["IsControlKeyDown"]
+local IsAltKeyDown = _G["IsAltKeyDown"]
+local C_EquipmentSet_UseEquipmentSet = C_EquipmentSet.UseEquipmentSet
+local StaticPopup_Show = _G["StaticPopup_Show"]
+local C_EquipmentSet_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
+local ToggleCharacter = _G["ToggleCharacter"]
+local EasyMenu = _G["EasyMenu"]
 
 local join = string.join
 local wipe = table.wipe
@@ -42,16 +58,16 @@ StaticPopupDialogs["ESDT_RENAME"] = {
 	end,
 	OnAccept = function(self, setId)
 		local newName = _G[self:GetName() .. "EditBox"]:GetText()
-		local oldName = C_EquipmentSet.GetEquipmentSetInfo(setId)
+		local oldName = C_EquipmentSet_GetEquipmentSetInfo(setId)
 		if not newName or newName == "" or oldName == newName then return end
-		C_EquipmentSet.ModifyEquipmentSet(setId, newName)
+		C_EquipmentSet_ModifyEquipmentSet(setId, newName)
 		DEFAULT_CHAT_FRAME:AddMessage(chatString:format((L["Renamed |cff%s%s|r to |cff%s%s|r!"]):format(hexColor, oldName, hexColor, newName)))
 	end,
 	EditBoxOnEnterPressed = function(self, setId)
 		local newName = self:GetText()
-		local oldName = C_EquipmentSet.GetEquipmentSetInfo(setId)
+		local oldName = C_EquipmentSet_GetEquipmentSetInfo(setId)
 		if not newName or newName == "" or oldName == newName then return end
-		C_EquipmentSet.ModifyEquipmentSet(setId, newName)
+		C_EquipmentSet_ModifyEquipmentSet(setId, newName)
 		DEFAULT_CHAT_FRAME:AddMessage(chatString:format((L["Renamed |cff%s%s|r to |cff%s%s|r!"]):format(hexColor, oldName, hexColor, newName)))
 		self:GetParent():Hide()
 	end,
@@ -75,8 +91,8 @@ StaticPopupDialogs["ESDT_DELETE"] = {
 	whileDead = true,
 	hideOnEscape = true,
 	OnAccept = function(self, setId)
-		local oldName = C_EquipmentSet.GetEquipmentSetInfo(setId)
-		C_EquipmentSet.DeleteEquipmentSet(setId)
+		local oldName = C_EquipmentSet_GetEquipmentSetInfo(setId)
+		C_EquipmentSet_DeleteEquipmentSet(setId)
 		DEFAULT_CHAT_FRAME:AddMessage(chatString:format((L["Deleted equipment set |cff%s%s|r!"]):format(hexColor, oldName)))
 	end,
 }
@@ -86,10 +102,10 @@ local function SendDebugMessage(message)
 end
 
 local function GetEquippedSet()
-	local num = C_EquipmentSet.GetNumEquipmentSets()
+	local num = C_EquipmentSet_GetNumEquipmentSets()
 	if num == 0 then return false end
 	for i = 0, num - 1 do
-		local name, icon, _, isEquipped = C_EquipmentSet.GetEquipmentSetInfo(i)
+		local name, icon, _, isEquipped = C_EquipmentSet_GetEquipmentSetInfo(i)
 		if isEquipped == true then
 			if E.db.equipsetsdt.debug == true then
 				SendDebugMessage((L["Current equipment set is |cff%s%s|r."]):format(hexColor, name))
@@ -102,12 +118,12 @@ end
 
 local function EquipmentSetClick(self, info)
 	
-	local setId = C_EquipmentSet.GetEquipmentSetID(info)
+	local setId = C_EquipmentSet_GetEquipmentSetID(info)
 	if not IsShiftKeyDown() and not IsControlKeyDown() and not IsAltKeyDown() then
 		-- change set
-		C_EquipmentSet.UseEquipmentSet(setId)
+		C_EquipmentSet_UseEquipmentSet(setId)
 		if lastPanel ~= nil then
-			local _, icon = C_EquipmentSet.GetEquipmentSetInfo(setId)
+			local _, icon = C_EquipmentSet_GetEquipmentSetInfo(setId)
 			lastPanel.text:SetFormattedText(displayString, E.db.equipsetsdt.dtIcon == true and iconString:format(("Interface\\Icons\\%s"):format(icon)) or "", info)
 		end
 		if E.db.equipsetsdt.debug == true then
@@ -121,7 +137,7 @@ local function EquipmentSetClick(self, info)
 		end
 	elseif IsControlKeyDown() then
 		-- save set
-		C_EquipmentSet.SaveEquipmentSet(setId)
+		C_EquipmentSet_SaveEquipmentSet(setId)
 		SendDebugMessage((L["Saved |cff%s%s|r!"]):format(hexColor, info))
 	elseif IsAltKeyDown() then
 		-- delete set
@@ -144,14 +160,14 @@ local function OnClick(self, button)
 		DT.tooltip:Hide()
 		
 		local menuList = {{text = L["Choose Equipment Set"], isTitle = true, notCheckable = true,},}
-		local numSets, curNumSets = C_EquipmentSet.GetNumEquipmentSets(), 2
+		local numSets, curNumSets = C_EquipmentSet_GetNumEquipmentSets(), 2
 		local color = "ffffff"
 		
 		if numSets == 0 then
 			menuList[curNumSets] = {text = ("|cffff0000%s|r"):format(L["No Equipment Sets"]), notCheckable = true,}
 		else
 			for i = 0, numSets - 1 do
-				local name, _, _, isEquipped, _, _, _, missing, _ = C_EquipmentSet.GetEquipmentSetInfo(i)
+				local name, _, _, isEquipped, _, _, _, missing, _ = C_EquipmentSet_GetEquipmentSetInfo(i)
 				
 				if missing > 0 then
 					color = "ff0000"
@@ -177,7 +193,7 @@ local function OnClick(self, button)
 end
 
 local function OnEnter(self)
-	local num = C_EquipmentSet.GetNumEquipmentSets()
+	local num = C_EquipmentSet_GetNumEquipmentSets()
 	local color = "ffffff"
 	local lineString = "%s |cff%s%s|r"
 	local itemString = "|cff00ff00%d|r|cffffffff/|r|cff%s%d|r|cffffffff/|r|cff0000ff%d|r|cffffffff/|r|cffff0000%d|r"
@@ -187,7 +203,7 @@ local function OnEnter(self)
 		DT.tooltip:AddLine(displayString:format("", L["No Equipment Sets"]))
 	else
 		for i = 0, num - 1 do
-			local name, icon, _, isEquipped, items, equipped, _, missing, ignored = C_EquipmentSet.GetEquipmentSetInfo(i)
+			local name, icon, _, isEquipped, items, equipped, _, missing, ignored = C_EquipmentSet_GetEquipmentSetInfo(i)
 			if isEquipped then
 				color = hexColor
 			else
@@ -251,28 +267,28 @@ P["equipsetsdt"] = {
 }
 
 local function InjectOptions()
-	if not E.Options.args.lockslap then
-		E.Options.args.lockslap = {
+	if not E.Options.args.Crackpotx then
+		E.Options.args.Crackpotx = {
 			type = "group",
 			order = -2,
-			name = L["Plugins by |cff9382c9Lockslap|r"],
+			name = L["Plugins by |cff9382c9Crackpotx|r"],
 			args = {
 				thanks = {
 					type = "description",
 					order = 1,
-					name = L["Thanks for using and supporting my work!  -- |cff9382c9Lockslap|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
+					name = L["Thanks for using and supporting my work!  -- |cff9382c9Crackpotx|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
 				},
 			},
 		}
-	elseif not E.Options.args.lockslap.args.thanks then
-		E.Options.args.lockslap.args.thanks = {
+	elseif not E.Options.args.Crackpotx.args.thanks then
+		E.Options.args.Crackpotx.args.thanks = {
 			type = "description",
 			order = 1,
-			name = L["Thanks for using and supporting my work!  -- |cff9382c9Lockslap|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
+			name = L["Thanks for using and supporting my work!  -- |cff9382c9Crackpotx|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
 		}
 	end
 	
-	E.Options.args.lockslap.args.equipsetsdt = {
+	E.Options.args.Crackpotx.args.equipsetsdt = {
 		type = "group",
 		name = L["Equipment Sets Datatext"],
 		get = function(info) return E.db.equipsetsdt[info[#info]] end,
@@ -322,18 +338,18 @@ local function InjectOptions()
 	}
 	
 	for i = 1, 10 do
-		E.Options.args.lockslap.args.equipsetsdt.args.binds.args[("outfit_%d"):format(i)] = {
+		E.Options.args.Crackpotx.args.equipsetsdt.args.binds.args[("outfit_%d"):format(i)] = {
 			type = "select",
 			order = i + 1,
 			name = (L["Keybind %d"]):format(i),
 			desc = (L["Choose the outfit for keybind %d."]):format(i),
 			values = function()
-				if C_EquipmentSet.GetNumEquipmentSets() == 0 then
+				if C_EquipmentSet_GetNumEquipmentSets() == 0 then
 					return {["none"] = L["No Sets Found"]}
 				else
 					local sets = {["none"] = L["None"]}
-					for x = 1, C_EquipmentSet.GetNumEquipmentSets() do
-						local name = C_EquipmentSet.GetEquipmentSetInfo(x)
+					for x = 1, C_EquipmentSet_GetNumEquipmentSets() do
+						local name = C_EquipmentSet_GetEquipmentSetInfo(x)
 						sets[name] = name
 					end
 					return sets
@@ -375,7 +391,7 @@ function ElvUI_ESDT:EquipOutfit(outfit)
 		end
 		return
 	else
-		C_EquipmentSet.UseEquipmentSet(selOutfit)
+		C_EquipmentSet_UseEquipmentSet(selOutfit)
 		if E.db.equipsetsdt.debug == true then
 			SendDebugMessage((L["Changed outfit to |cff%s%s|r."]):format(hexColor, selOutfit))
 		end
