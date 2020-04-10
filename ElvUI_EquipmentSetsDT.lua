@@ -369,7 +369,7 @@ local function ValueColorUpdate(hex, r, g, b)
 	hexColor = ("%02x%02x%02x"):format(r * 255, g * 255, b * 255) or "ffffff"
 	
 	if lastPanel ~= nil then
-		OnEvent(lastPanel)
+		OnEvent(lastPanel, "ELVUI_COLOR_UPDATE")
 	end
 end
 E["valueColorUpdateFuncs"][ValueColorUpdate] = true
