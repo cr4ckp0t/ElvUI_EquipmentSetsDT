@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- ElvUI Equipment Sets Datatext By Crackpotx (US, Lightbringer)
+-- ElvUI Equipment Sets Datatext By Crackpot (US, Thrall)
 -------------------------------------------------------------------------------
 local debug = false
 --@debug@

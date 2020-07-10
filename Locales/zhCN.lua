@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- ElvUI Equipment Sets Datatext By Crackpotx (US, Lightbringer)
+-- ElvUI Equipment Sets Datatext By Crackpot (US, Thrall)
 -------------------------------------------------------------------------------
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("ElvUI_EquipmentSetsDT", "zhCN", false)

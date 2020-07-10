@@ -403,4 +403,5 @@ function ElvUI_ESDT:EquipOutfit(outfit)
 end
 
 EP:RegisterPlugin(..., InjectOptions)
-DT:RegisterDatatext("Equipment Sets", {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter)
+DT:RegisterDatatext("Equipment Sets", nil, {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter, nil, L["Equipment Sets"])
+--DT:RegisterDatatext("Equipment Sets", {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter)
