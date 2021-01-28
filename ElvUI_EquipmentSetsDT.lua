@@ -172,15 +172,16 @@ local function OnClick(self, button)
 
 			for i = minimum, maximum do
 				local name, _, _, isEquipped, _, _, _, missing, _ = C_EquipmentSet_GetEquipmentSetInfo(i)
-				
-				if missing > 0 then
-					color = "ff0000"
-				else
-					color = isEquipped == true and hexColor or "ffffff"
+				if name then
+					if missing > 0 then
+						color = "ff0000"
+					else
+						color = isEquipped == true and hexColor or "ffffff"
+					end
+					
+					menuList[curNumSets] = {text = ("|cff%s%s|r"):format(color, name), func = EquipmentSetClick, arg1 = name, checked = isEquipped == true and true or false,}
+					curNumSets = curNumSets + 1
 				end
-				
-				menuList[curNumSets] = {text = ("|cff%s%s|r"):format(color, name), func = EquipmentSetClick, arg1 = name, checked = isEquipped == true and true or false,}
-				curNumSets = curNumSets + 1
 			end
 			
 			-- add a hint
@@ -208,12 +209,14 @@ local function OnEnter(self)
 	else
 		for i = 0, num - 1 do
 			local name, icon, _, isEquipped, items, equipped, _, missing, ignored = C_EquipmentSet_GetEquipmentSetInfo(i)
-			if isEquipped then
-				color = hexColor
-			else
-				color = missing > 0 and "ff0000" or "ffffff"
+			if name then
+				if isEquipped then
+					color = hexColor
+				else
+					color = missing > 0 and "ff0000" or "ffffff"
+				end
+				DT.tooltip:AddDoubleLine(lineString:format(E.db.equipsetsdt.ttIcon == true and iconString:format(icon) or "", color, name), itemString:format(equipped, hexColor, items, ignored, missing))
 			end
-			DT.tooltip:AddDoubleLine(lineString:format(E.db.equipsetsdt.ttIcon == true and iconString:format(icon) or "", color, name), itemString:format(equipped, hexColor, items, ignored, missing))
 		end
 	end
 	
@@ -354,7 +357,9 @@ local function InjectOptions()
 					local sets = {["none"] = L["None"]}
 					for x = 1, C_EquipmentSet_GetNumEquipmentSets() do
 						local name = C_EquipmentSet_GetEquipmentSetInfo(x)
-						sets[name] = name
+						if name then
+							sets[name] = name
+						end
 					end
 					return sets
 				end
@@ -364,7 +369,7 @@ local function InjectOptions()
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = join("", "|cffffffffSet:|r %s ", hex, "%s|r")
+	displayString = join("", "|cffffffffSet:|r %s", hex, "%s|r")
 	chatString = join("", hex, "ElvUI_ESDT|cffffffff: %s|r")
 	hexColor = ("%02x%02x%02x"):format(r * 255, g * 255, b * 255) or "ffffff"
 	
