@@ -1,7 +1,7 @@
-## Interface: 90005
-## Author: Crackpotx
+## Interface: 90100
+## Author: Crackpot
 ## Title: |cff1784d1ElvUI|r Equipment Sets Datatext
-## Version: 4.1.1
+## Version: 4.1.2
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
 
