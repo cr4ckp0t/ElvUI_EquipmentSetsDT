@@ -1,7 +1,7 @@
-## Interface: 100000
+## Interface: 100002
 ## Author: Crackpot
 ## Title: |cff1784d1ElvUI|r Equipment Sets Datatext
-## Version: 4.1.7
+## Version: 4.1.8
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
 
@@ -23,4 +23,5 @@ Locales\zhCN.lua
 Locales\zhTW.lua
 
 ElvUI_EquipmentSetsDT.lua
+
 
