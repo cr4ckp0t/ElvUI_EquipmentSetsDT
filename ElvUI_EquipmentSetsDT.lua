@@ -32,7 +32,6 @@ local displayString = ""
 local chatString = ""
 local iconString = "|T%s:14:14:0:0:64:64:4:60:4:60|t"
 local hexColor = "ffffff"
-local lastPanel
 
 -- for drop down menu
 local menuFrame = CreateFrame("Frame", "ESDTEquipmentSetMenu", E.UIParent, "UIDropDownMenuTemplate")
@@ -117,7 +116,6 @@ local function GetEquippedSet()
 end
 
 local function EquipmentSetClick(self, info)
-	
 	local setId = C_EquipmentSet_GetEquipmentSetID(info)
 	if not IsShiftKeyDown() and not IsControlKeyDown() and not IsAltKeyDown() then
 		-- change set
@@ -233,8 +231,6 @@ local function OnEnter(self)
 end
 
 local function OnEvent(self, event)
-	lastPanel = self
-	
 	if event == "PLAYER_ENTERING_WORLD" then
 		local set, icon = GetEquippedSet()
 		if not set then
@@ -368,16 +364,13 @@ local function InjectOptions()
 	end
 end
 
-local function ValueColorUpdate(hex, r, g, b)
+local function ValueColorUpdate(self, hex, r, g, b)
 	displayString = join("", "|cffffffffSet:|r %s", hex, "%s|r")
 	chatString = join("", hex, "ElvUI_ESDT|cffffffff: %s|r")
-	hexColor = ("%02x%02x%02x"):format(r * 255, g * 255, b * 255) or "ffffff"
+	hexColor = hex
 	
-	if lastPanel ~= nil then
-		OnEvent(lastPanel, "ELVUI_COLOR_UPDATE")
-	end
+	OnEvent(self)
 end
-E["valueColorUpdateFuncs"][ValueColorUpdate] = true
 
 -- keybind handlers
 BINDING_HEADER_ESDT_TITLE = L["ElvUI Equipment Sets Datatext"]
@@ -408,5 +401,4 @@ function ElvUI_ESDT:EquipOutfit(outfit)
 end
 
 EP:RegisterPlugin(..., InjectOptions)
-DT:RegisterDatatext("Equipment Sets", nil, {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter, nil, L["Equipment Sets"])
---DT:RegisterDatatext("Equipment Sets", {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter)
+DT:RegisterDatatext("Equipment Sets", nil, {"PLAYER_ENTERING_WORLD", "EQUIPMENT_SETS_CHANGED", "EQUIPMENT_SWAP_FINISHED"}, OnEvent, nil, OnClick, OnEnter, nil, L["Equipment Sets"], nil, ValueColorUpdate)
