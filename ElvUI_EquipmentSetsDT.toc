@@ -1,7 +1,7 @@
 ## Interface: 100005
 ## Author: Crackpot
 ## Title: |cff1784d1ElvUI|r Equipment Sets Datatext
-## Version: 4.2.0
+## Version: 4.2.1
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
 
