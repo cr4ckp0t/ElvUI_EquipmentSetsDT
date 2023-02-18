@@ -1,14 +1,9 @@
 ## Interface: 100005
 ## Author: Crackpot
 ## Title: |cff1784d1ElvUI|r Equipment Sets Datatext
-## Version: 4.1.10
+## Version: 4.2.0
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
-
-Libraries\LibStub\LibStub.lua
-Libraries\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libraries\AceLocale-3.0\AceLocale-3.0.xml
-Libraries\AceTimer-3.0\AceTimer-3.0.xml
 
 Locales\enUS.lua
 Locales\deDE.lua
@@ -23,6 +18,3 @@ Locales\zhCN.lua
 Locales\zhTW.lua
 
 ElvUI_EquipmentSetsDT.lua
-
-
-

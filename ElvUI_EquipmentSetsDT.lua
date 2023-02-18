@@ -4,8 +4,8 @@
 local E, _, V, P, G = unpack(ElvUI)
 ElvUI_ESDT = E:NewModule("ElvUI_EquipmentSetsDT")
 local DT = E:GetModule("DataTexts")
-local L = LibStub("AceLocale-3.0"):GetLocale("ElvUI_EquipmentSetsDT", false)
-local EP = LibStub("LibElvUIPlugin-1.0")
+local L = E.Libs.ACL:GetLocale("ElvUI_EquipmentSetsDT", false)
+local EP = E.Libs.EP
 
 local unpack = _G["unpack"]
 local CreateFrame = _G["CreateFrame"]
@@ -231,23 +231,12 @@ local function OnEnter(self)
 end
 
 local function OnEvent(self, event)
-	if event == "PLAYER_ENTERING_WORLD" then
-		local set, icon = GetEquippedSet()
-		if not set then
-			self.text:SetFormattedText(displayString, "", L["No Equipped Set"])
-			return
-		end
-		self.text:SetFormattedText(displayString, E.db.equipsetsdt.dtIcon == true and iconString:format(icon) or "", set)
-	else
-		LibStub("AceTimer-3.0"):ScheduleTimer(function()
-			local set, icon = GetEquippedSet()
-			if not set then
-				self.text:SetFormattedText(displayString, "", L["No Equipped Set"])
-				return
-			end
-			self.text:SetFormattedText(displayString, E.db.equipsetsdt.dtIcon == true and iconString:format(icon) or "", set)
-		end, 0.5)
+	local set, icon = GetEquippedSet()
+	if not set then
+		self.text:SetFormattedText(displayString, "", L["No Equipped Set"])
+		return
 	end
+	self.text:SetFormattedText(displayString, E.db.equipsetsdt.dtIcon == true and iconString:format(icon) or "", set)
 end
 
 P["equipsetsdt"] = {
