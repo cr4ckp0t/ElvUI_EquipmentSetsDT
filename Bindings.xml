@@ -1,32 +1,32 @@
 <Bindings>
-	<Binding name="ESDT_OUTFIT1" header="ESDT_TITLE">
+	<Binding name="ESDT_OUTFIT1" header="ESDT_TITLE" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(1)
 	</Binding>
-	<Binding name="ESDT_OUTFIT2">
+	<Binding name="ESDT_OUTFIT2" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(2)
 	</Binding>
-	<Binding name="ESDT_OUTFIT3">
+	<Binding name="ESDT_OUTFIT3" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(3)
 	</Binding>
-	<Binding name="ESDT_OUTFIT4">
+	<Binding name="ESDT_OUTFIT4" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(4)
 	</Binding>
-	<Binding name="ESDT_OUTFIT5">
+	<Binding name="ESDT_OUTFIT5" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(5)
 	</Binding>
-	<Binding name="ESDT_OUTFIT6">
+	<Binding name="ESDT_OUTFIT6" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(6)
 	</Binding>
-	<Binding name="ESDT_OUTFIT7">
+	<Binding name="ESDT_OUTFIT7" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(7)
 	</Binding>
-	<Binding name="ESDT_OUTFIT8">
+	<Binding name="ESDT_OUTFIT8" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(8)
 	</Binding>
-	<Binding name="ESDT_OUTFIT9">
+	<Binding name="ESDT_OUTFIT9" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(9)
 	</Binding>
-	<Binding name="ESDT_OUTFIT10">
+	<Binding name="ESDT_OUTFIT10" category="BINDING_HEADER_ELVUI">
 		ElvUI_ESDT:EquipOutfit(10)
 	</Binding>
 </Bindings>

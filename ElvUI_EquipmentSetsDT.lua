@@ -6,22 +6,23 @@ ElvUI_ESDT = E:NewModule("ElvUI_EquipmentSetsDT")
 local DT = E:GetModule("DataTexts")
 local L = E.Libs.ACL:GetLocale("ElvUI_EquipmentSetsDT", false)
 local EP = E.Libs.EP
+local ACH = E.Libs.ACH
 
-local unpack = _G["unpack"]
-local CreateFrame = _G["CreateFrame"]
+local unpack = _G.unpack
+local CreateFrame = _G.CreateFrame
 local C_EquipmentSet_GetEquipmentSetInfo = C_EquipmentSet.GetEquipmentSetInfo
 local C_EquipmentSet_ModifyEquipmentSet = C_EquipmentSet.ModifyEquipmentSet
 local C_EquipmentSet_DeleteEquipmentSet = C_EquipmentSet.DeleteEquipmentSet
 local C_EquipmentSet_GetNumEquipmentSets = C_EquipmentSet.GetNumEquipmentSets
 local C_EquipmentSet_GetEquipmentSetID = C_EquipmentSet.GetEquipmentSetID
-local IsShiftKeyDown = _G["IsShiftKeyDown"]
-local IsControlKeyDown = _G["IsControlKeyDown"]
-local IsAltKeyDown = _G["IsAltKeyDown"]
+local IsShiftKeyDown = _G.IsShiftKeyDown
+local IsControlKeyDown = _G.IsControlKeyDown
+local IsAltKeyDown = _G.IsAltKeyDown
 local C_EquipmentSet_UseEquipmentSet = C_EquipmentSet.UseEquipmentSet
-local StaticPopup_Show = _G["StaticPopup_Show"]
+local StaticPopup_Show = _G.StaticPopup_Show
 local C_EquipmentSet_SaveEquipmentSet = C_EquipmentSet.SaveEquipmentSet
-local ToggleCharacter = _G["ToggleCharacter"]
-local EasyMenu = _G["EasyMenu"]
+local ToggleCharacter = _G.ToggleCharacter
+local EasyMenu = _G.EasyMenu
 
 local join = string.join
 local wipe = table.wipe
@@ -260,96 +261,38 @@ P["equipsetsdt"] = {
 
 local function InjectOptions()
 	if not E.Options.args.Crackpotx then
-		E.Options.args.Crackpotx = {
-			type = "group",
-			order = -2,
-			name = L["Plugins by |cff0070deCrackpotx|r"],
-			args = {
-				thanks = {
-					type = "description",
-					order = 1,
-					name = L["Thanks for using and supporting my work!  -- |cff0070deCrackpotx|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
-				},
-			},
-		}
-	elseif not E.Options.args.Crackpotx.args.thanks then
-		E.Options.args.Crackpotx.args.thanks = {
-			type = "description",
-			order = 1,
-			name = L["Thanks for using and supporting my work!  -- |cff0070deCrackpotx|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."],
-		}
+		E.Options.args.Crackpotx = ACH:Group(L["Plugins by |cff0070deCrackpotx|r"])
 	end
-	
-	E.Options.args.Crackpotx.args.equipsetsdt = {
-		type = "group",
-		name = L["Equipment Sets Datatext"],
-		get = function(info) return E.db.equipsetsdt[info[#info]] end,
-		set = function(info, value) E.db.equipsetsdt[info[#info]] = value; DT:LoadDataTexts() end,
-		args = {
-			dtIcon = {
-				type = "toggle",
-				order = 1,
-				name = L["Datatext Icon"],
-				desc = L["Display the currently equipped set's icon on the datatext, if available."],
-			},
-			ttIcon = {
-				type = "toggle",
-				order = 2,
-				name = L["Tooltip Icons"],
-				desc = L["Display the icons for the equipment sets in the tooltip, if available."],
-			},
-			hint = {
-				type = "toggle",
-				order = 3,
-				name = L["Show Hint"],
-				desc = L["Show the hint in the tooltip."],
-			},
-			debug = {
-				type = "toggle",
-				order = 4,
-				name = L["Debug Mode"],
-				desc = L["Toggle debug mode.  |cffff0000Useful if the addon is not functioning properly.|r"],
-			},
-			binds = {
-				type = "group",
-				order = 99,
-				guiInline = true,
-				name = L["Keybindings"],
-				get = function(info) return E.db.equipsetsdt.binds[info[#info]] end,
-				set = function(info, value) E.db.equipsetsdt.binds[info[#info]] = value end,
-				args = {
-					bindsHelp = {
-						type = "description",
-						order = 1,
-						width = "full",
-						name = L["You can set the keybinds from within WOW's keybinding interface."],
-					},
-				},
-			},
-		},
-	}
+	if not E.Options.args.Crackpotx.args.thanks then
+		E.Options.args.Crackpotx.args.thanks = ACH:Description(L["Thanks for using and supporting my work!  -- |cff0070deCrackpotx|r\n\n|cffff0000If you find any bugs, or have any suggestions for any of my addons, please open a ticket at that particular addon's page on CurseForge."], 1)
+	end
+
+	-- main settings group
+	E.Options.args.Crackpotx.args.equipsetdt = ACH:Group(L["Equipment Sets Datatext"], nil, nil, nil, function(info) return E.db.equipsetsdt[info[#info]] end, function(info, value) E.db.equipsetsdt[info[#info]] = value; DT:ForceUpdate_DataText("Equipment Sets") end)
+	E.Options.args.Crackpotx.args.equipsetdt.args.dtIcon = ACH:Toggle(L["Datatext Icon"], L["Display the currently equipped set's icon on the datatext, if available."], 1)
+	E.Options.args.Crackpotx.args.equipsetdt.args.ttIcon = ACH:Toggle(L["Tooltip Icons"], L["Display the icons for the equipment sets in the tooltip, if available."], 2)
+	E.Options.args.Crackpotx.args.equipsetdt.args.hint = ACH:Toggle(L["Debug Mode"], L["Show the hint in the tooltip."], 3)
+	E.Options.args.Crackpotx.args.equipsetdt.args.debug = ACH:Toggle(L["Debug Mode"], L["Toggle debug mode.  |cffff0000Useful if the addon is not functioning properly.|r"], 4)
+
+	-- keybinds
+	E.Options.args.Crackpotx.args.equipsetdt.args.binds = ACH:Group(L["Keybindings"], nil, 99, nil, function(info) return E.db.equipsetsdt.binds[info[#info]] end, function(info, value) E.db.equipsetsdt.binds[info[#info]] = value end)
+	E.Options.args.Crackpotx.args.equipsetdt.args.binds.args.bindsHelp = ACH:Description(L["You can set the keybinds from within WOW's keybinding interface."], 1, nil, nil, nil, nil, nil, "full")
 	
 	for i = 1, 10 do
-		E.Options.args.Crackpotx.args.equipsetsdt.args.binds.args[("outfit_%d"):format(i)] = {
-			type = "select",
-			order = i + 1,
-			name = (L["Keybind %d"]):format(i),
-			desc = (L["Choose the outfit for keybind %d."]):format(i),
-			values = function()
-				if C_EquipmentSet_GetNumEquipmentSets() == 0 then
-					return {["none"] = L["No Sets Found"]}
-				else
-					local sets = {["none"] = L["None"]}
-					for x = 1, C_EquipmentSet_GetNumEquipmentSets() do
-						local name = C_EquipmentSet_GetEquipmentSetInfo(x)
-						if name then
-							sets[name] = name
-						end
+		E.Options.args.Crackpotx.args.equipsetdt.args.binds.args[("outfit_%d"):format(i)] = ACH:Select((L["Keybind %d"]):format(i), (L["Choose the outfit for keybind %d."]):format(i), i + 1, function()
+			if C_EquipmentSet_GetNumEquipmentSets() == 0 then
+				return {["none"] = L["No Sets Found"]}
+			else
+				local sets = {["none"] = L["None"]}
+				for x = 1, C_EquipmentSet_GetNumEquipmentSets() do
+					local name = C_EquipmentSet_GetEquipmentSetInfo(x)
+					if name then
+						sets[name] = name
 					end
-					return sets
 				end
-			end,
-		}
+				return sets
+			end
+		end)
 	end
 end
 
@@ -361,18 +304,13 @@ local function ValueColorUpdate(self, hex, r, g, b)
 	OnEvent(self)
 end
 
--- keybind handlers
-BINDING_HEADER_ESDT_TITLE = L["ElvUI Equipment Sets Datatext"]
-BINDING_NAME_ESDT_OUTFIT1 = L["Outfit 1"]
-BINDING_NAME_ESDT_OUTFIT2 = L["Outfit 2"]
-BINDING_NAME_ESDT_OUTFIT3 = L["Outfit 3"]
-BINDING_NAME_ESDT_OUTFIT4 = L["Outfit 4"]
-BINDING_NAME_ESDT_OUTFIT5 = L["Outfit 5"]
-BINDING_NAME_ESDT_OUTFIT6 = L["Outfit 6"]
-BINDING_NAME_ESDT_OUTFIT7 = L["Outfit 7"]
-BINDING_NAME_ESDT_OUTFIT8 = L["Outfit 8"]
-BINDING_NAME_ESDT_OUTFIT9 = L["Outfit 9"]
-BINDING_NAME_ESDT_OUTFIT10 = L["Outfit 10"]
+function ElvUI_ESDT:OnInitialize()
+	-- keybind handlers
+	_G.BINDING_HEADER_ESDT_TITLE = L["ElvUI Equipment Sets Datatext"]
+	for i = 1, 10 do
+		_G[("BINDING_NAME_ESDT_OUTFIT%d"):format(i)] = L[("Outfit %d"):format(i)]
+	end
+end
 
 function ElvUI_ESDT:EquipOutfit(outfit)
 	local selOutfit = E.db.equipsetsdt.binds[("outfit_%d"):format(outfit)]
