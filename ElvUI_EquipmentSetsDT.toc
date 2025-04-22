@@ -1,8 +1,8 @@
-## Interface: 110100
+## Interface: 110105
 ## Author: Crackpot
 ## Title: ElvUI Equipment Sets Datatext
 ## IconTexture: Interface\AddOns\ElvUI_EquipmentSetsDT\Media\crackpot
-## Version: 4.2.15
+## Version: 4.2.16
 ## Notes: Simple equipment sets datatext.
 ## RequiredDeps: ElvUI
 
@@ -19,6 +19,7 @@ Locales\zhCN.lua
 Locales\zhTW.lua
 
 ElvUI_EquipmentSetsDT.lua
+
 
 
 
